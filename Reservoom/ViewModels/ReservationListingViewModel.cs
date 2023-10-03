@@ -11,13 +11,15 @@ namespace Reservoom.ViewModels
 {
     public class ReservationListingViewModel : ObservableObject, IDisposable
     {
-        private readonly ObservableCollection<Reservation> reservations;
+        private readonly ObservableCollection<ReservationViewModel> _reservations;
+
+        public IEnumerable<ReservationViewModel> Reservations => _reservations;
 
         public ICommand MakeReservationCommand { get; }
 
         public ReservationListingViewModel()
         {
-            
+            _reservations = new ObservableCollection<ReservationViewModel>();
         }
 
         void IDisposable.Dispose()

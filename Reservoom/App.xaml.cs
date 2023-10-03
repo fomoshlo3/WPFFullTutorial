@@ -26,7 +26,7 @@ namespace Reservoom
                 (
                      new Reservation
                      (
-                        new RoomID(1, 3),
+                        new @string(1, 3),
                         "Fomo Shlo",
                         new DateTime(2023, 1, 1),
                         new DateTime(2023, 1, 2)
@@ -37,7 +37,7 @@ namespace Reservoom
                 (
                     new Reservation
                     (
-                        new RoomID(1, 1),
+                        new @string(1, 1),
                         "Fomo Shlo",
                         new DateTime(2023, 1, 13),
                         new DateTime(2023, 1, 15)
@@ -48,7 +48,7 @@ namespace Reservoom
                 (
                     new Reservation
                     (
-                        new RoomID(1, 2),
+                        new @string(1, 2),
                         "Fomo Shlo",
                         new DateTime(2023, 1, 1),
                         new DateTime(2023, 1, 5)

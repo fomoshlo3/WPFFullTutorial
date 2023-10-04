@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
-    public class ReservationViewModel : ObservableObject, IDisposable
+    public class ReservationViewModel : ViewModelBase, IDisposable
     {
         readonly Reservation reservation;
 
         public string RoomID => reservation.RoomID?.ToString();
         public  string UserName => reservation.UserName;
-        public DateTime StartTime => reservation.StartTime;
-        public DateTime EndTime => reservation.EndTime;
+        public string StartTime => reservation.StartTime.ToString("d");
+        public string EndTime => reservation.EndTime.ToString("d");
 
         //private string _roomID;
 

@@ -4,13 +4,13 @@ namespace Reservoom.Models
 {
     public class Reservation
     {
-        public @string RoomID { get; }
+        public RoomID RoomID { get; }
         public string UserName { get; }
         public DateTime StartTime { get; }
         public DateTime EndTime { get; }
         public TimeSpan Length => EndTime - StartTime;
 
-        public Reservation(@string roomID, string userName, DateTime startTime, DateTime endTime)
+        public Reservation(RoomID roomID, string userName, DateTime startTime, DateTime endTime)
         {
             RoomID = roomID;
             UserName = userName;

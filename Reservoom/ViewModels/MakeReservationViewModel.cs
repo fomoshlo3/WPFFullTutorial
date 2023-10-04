@@ -1,77 +1,66 @@
-﻿using System;
+﻿using Reservoom.Commands;
+using Reservoom.Models;
+using Reservoom.Services;
+using Reservoom.Stores;
+using System;
 using System.Windows.Input;
 
 namespace Reservoom.ViewModels
 {
-    public class MakeReservationViewModel : ObservableObject, IDisposable
+    public class MakeReservationViewModel : ViewModelBase, IDisposable
     {
         private string _userName;
-
         public string UserName
         {
-            get { return _userName; }
-            set
-            {
-                _userName = value;
-                RaisePropertyChanged(nameof(UserName));
-            }
+            get => _userName;
+            set => Set(ref _userName, value);
         }
 
         private int _roomNumber;
 
         public int RoomNumber
         {
-            get { return _roomNumber; }
-            set
-            {
-                _roomNumber = value;
-                RaisePropertyChanged(nameof(RoomNumber));
-            }
+            get => _roomNumber;
+            set => Set(ref _roomNumber, value);
         }
 
         private int _floorNumber;
 
         public int FloorNumber
         {
-            get { return _floorNumber; }
-            set
-            {
-                _floorNumber = value;
-                RaisePropertyChanged(nameof(FloorNumber));
-            }
+            get => _floorNumber;
+            set => Set(ref _floorNumber, value);
         }
 
-        private DateTime _startDate;
+        private DateTime _startDate = new DateTime(2023, 1, 1);
 
         public DateTime StartDate
         {
-            get { return _startDate; }
-            set
-            {
-                _startDate = value;
-                RaisePropertyChanged(nameof(StartDate));
-            }
+            get => _startDate;
+            set => Set(ref _startDate, value);
         }
 
-        private DateTime _endDate;
+        private DateTime _endDate = new DateTime(2023, 1, 1);
 
         public DateTime EndDate
         {
-            get { return _endDate; }
-            set
-            {
-                _endDate = value;
-                RaisePropertyChanged(nameof(EndDate));
-            }
+            get => _endDate;
+            set => Set(ref _endDate, value);
         }
 
         public ICommand SubmitCommand { get; }
 
         public ICommand CancelCommand { get; }
 
+        public MakeReservationViewModel(Hotel hotel, NavigationService reservationListingViewNavigationsService)
+        {
+            SubmitCommand = new SubmitReservationCommand(this, hotel, reservationListingViewNavigationsService);
+            CancelCommand = new NavigateCommand(reservationListingViewNavigationsService);
+        }
+
         void IDisposable.Dispose()
         {
-            throw new NotImplementedException();
+           
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Reservoom.Models;
+using Reservoom.Stores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +8,26 @@ using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
-    public class MainViewModel : ObservableObject, IDisposable
+    public class MainViewModel : ViewModelBase, IDisposable
     {
+        private readonly NavigationStore _navigationStore;
+        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
+        public MainViewModel(NavigationStore navigationStore)
+        {
+            _navigationStore=navigationStore;
+            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+        }
+
+   
 
         void IDisposable.Dispose()
         {
             throw new NotImplementedException();
+        }
+        private void OnCurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentViewModel));
         }
     }
 }

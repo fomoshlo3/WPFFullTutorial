@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
-    public class ObservableObject : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -16,13 +16,13 @@ namespace Reservoom.ViewModels
         /// Notifies the UI that a property has changed.
         /// </summary>
         /// <param name="propertyName"></param>
-        protected void RaisePropertyChanged(string? propertyName)
+        protected void OnPropertyChanged(string? propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
-        /// Sets a calling property's value and invokes RaisePropertyChanged method. 
+        /// Sets a calling property's value and invokes OnPropertyChanged method. 
         /// </summary>
         /// <typeparam name="T">Proofs if field and newValue are of the same type</typeparam>
         /// <param name="field">backing field</param>
@@ -38,7 +38,7 @@ namespace Reservoom.ViewModels
             }
 
             field = newValue;
-            RaisePropertyChanged(propertyName);
+            OnPropertyChanged(propertyName);
             return true;
         }
 

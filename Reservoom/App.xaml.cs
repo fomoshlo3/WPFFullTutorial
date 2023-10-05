@@ -2,9 +2,15 @@
 using Reservoom.DbContexts;
 using Reservoom.Models;
 using Reservoom.Services;
+using Reservoom.Services.ReservationCreators.Contracts;
+using Reservoom.Services.ReservationProviders.Contracts;
+using Reservoom.Services.ReservationConflictValidators.Contracts;
 using Reservoom.Stores;
 using Reservoom.ViewModels;
 using System.Windows;
+using Reservoom.Services.ReservationProviders;
+using Reservoom.Services.ReservationCreators;
+using Reservoom.Services.ReservationConflictValidators;
 
 namespace Reservoom
 {
@@ -16,10 +22,17 @@ namespace Reservoom
         private const string CONNECTION_STRING = "Data Source=reservoom.db";
         private readonly Hotel _hotel;
         private readonly NavigationStore _navigationStore;
+        private readonly ReservoomDbContextFactory _reservoomDbContextFactory;
 
         public App()
         {
-            _hotel = new Hotel("SingletonSean Suite");
+            _reservoomDbContextFactory = new(CONNECTION_STRING);
+            IReservationProvider reservationProvider = new DatabaseReservationProvider(_reservoomDbContextFactory);
+            IReservationCreator reservationCreator = new DatabaseReservationCreator(_reservoomDbContextFactory);
+            IReservationConflictValidator reservationConflictValidator = new DatabaseReservationConflictValidator(_reservoomDbContextFactory);
+            ReservationBook reservationBook = new(reservationProvider, reservationCreator, reservationConflictValidator);
+
+            _hotel = new Hotel("SingletonSean Suite", reservationBook);
             _navigationStore= new();
         }
 
@@ -29,10 +42,9 @@ namespace Reservoom
              * when setting the connection string with Data Source=xxxx.db which leads to the app not finding it in the bin/Debug.
              * it is best to instantiate the referenciing DbContext class in the overridden startup method 
              */
-            var options = new DbContextOptionsBuilder().UseSqlite(CONNECTION_STRING).Options;
-            using (var dbContext = new ReservoomDbContext(options))
+            using (var dbContext = _reservoomDbContextFactory.CreateDbContext())
             {
-                dbContext.Database.EnsureCreated();
+               dbContext.Database.Migrate();
             };
 
 
@@ -49,7 +61,7 @@ namespace Reservoom
 
         private ReservationListingViewModel Create_ReservationListingViewModel()
         {
-            return new ReservationListingViewModel(_hotel, new NavigationService(_navigationStore, Create_MakeReservationViewModel));
+            return ReservationListingViewModel.LoadViewModel(_hotel, new NavigationService(_navigationStore, Create_MakeReservationViewModel));
         }
         private MakeReservationViewModel Create_MakeReservationViewModel()
         {

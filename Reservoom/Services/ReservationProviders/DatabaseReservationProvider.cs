@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Reservoom.Services.ReservationProviders
 {
-    public class DatabaseReservationProvider /*: IReservationProvider*/
+    public class DatabaseReservationProvider : IReservationProvider
     {
         private readonly ReservoomDbContextFactory _dbContextFactory;
 

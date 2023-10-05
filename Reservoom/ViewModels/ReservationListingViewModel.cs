@@ -21,27 +21,37 @@ namespace Reservoom.ViewModels
 
         public IEnumerable<ReservationViewModel> Reservations => _reservations;
 
+        public ICommand LoadReservationsCommand { get; }
         public ICommand MakeReservationCommand { get; }
 
         public ReservationListingViewModel(Hotel hotel, NavigationService makeReservationNavigationService)
         {
-            _hotel= hotel;
+            
             _reservations = new ObservableCollection<ReservationViewModel>();
 
+            LoadReservationsCommand=new LoadReservationsCommand(hotel, this);
             MakeReservationCommand = new NavigateCommand(makeReservationNavigationService);
 
-            UpdateReservations();
+            
+        }
+
+        public static ReservationListingViewModel LoadViewModel(Hotel hotel, NavigationService makeReservationNavigationService)
+        {
+            ReservationListingViewModel reservationListingViewModel = new(hotel, makeReservationNavigationService);
+            reservationListingViewModel.LoadReservationsCommand.Execute(null);
+
+            return reservationListingViewModel;
         }
 
         void IDisposable.Dispose()
         {
             throw new NotImplementedException();
         }
-        private void UpdateReservations()
+        public void UpdateReservations(IEnumerable<Reservation> reservations)
         {
             _reservations.Clear();
 
-            foreach(var reservation in _hotel.GetReservations())
+            foreach(var reservation in reservations)
             {
                 var reservationViewModel = new ReservationViewModel(reservation);
                 _reservations.Add(reservationViewModel);

@@ -9,6 +9,6 @@ namespace Reservoom.Services.ReservationConflictValidators.Contracts
 {
     public interface IReservationConflictValidator
     {
-        Task<bool> DoesCauseConflict(Reservation reservation);
+        Task<Reservation> GetConflictingReservation(Reservation reservation);
     }
 }

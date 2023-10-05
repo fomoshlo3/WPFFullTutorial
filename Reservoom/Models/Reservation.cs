@@ -18,19 +18,6 @@ namespace Reservoom.Models
             EndTime = endTime;
         }
 
-        /// <summary>
-        /// Check if a reservation conflicts.
-        /// </summary>
-        /// <param name="reservation">The incoming reservation.</param>
-        /// <returns>True/False for conflicts.</returns>
-        public bool Conflicts(Reservation reservation)
-        {
-            if (reservation.RoomID.Equals(RoomID))
-            {
-                return true;
-            }
-
-            return reservation.StartTime < EndTime && reservation.EndTime > StartTime ;
-        }
+        
     }
 }

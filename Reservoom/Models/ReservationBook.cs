@@ -1,4 +1,5 @@
 ﻿using Reservoom.Exceptions;
+using Reservoom.Services.ReservationConflictValidators.Contracts;
 using Reservoom.Services.ReservationCreators.Contracts;
 using Reservoom.Services.ReservationProviders.Contracts;
 using System;
@@ -12,13 +13,15 @@ namespace Reservoom.Models
     {
         private readonly IReservationProvider _reservationProvider;
         private readonly IReservationCreator _reservationCreator;
+        private readonly IReservationConflictValidator _reservationConflictValidator;
 
 
 
-        public ReservationBook(IReservationProvider reservationProvider, IReservationCreator reservationCreator)
+        public ReservationBook(IReservationProvider reservationProvider, IReservationCreator reservationCreator, IReservationConflictValidator reservationConflictValidator)
         {
             _reservationProvider=reservationProvider;
             _reservationCreator=reservationCreator;
+            _reservationConflictValidator=reservationConflictValidator;
         }
 
         /// <summary>
@@ -37,12 +40,11 @@ namespace Reservoom.Models
         /// <exception cref="ReservationConflictException">Thrown if incoming reservation conflicts with existing reservation.</exception>
         public async Task AddReservation(Reservation reservationToAdd)
         {
-            foreach (var existingReservation in _reservations)
+            var conflictingReservation = await _reservationConflictValidator.GetConflictingReservation(reservationToAdd);
+
+            if (conflictingReservation != null)
             {
-                if (existingReservation.Conflicts(reservationToAdd))
-                {
-                    throw new ReservationConflictException(existingReservation, reservationToAdd);
-                }
+                throw new ReservationConflictException(conflictingReservation, reservationToAdd);
             }
 
             await _reservationCreator.CreateReservation(reservationToAdd);

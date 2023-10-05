@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Reservoom.DbContexts;
 using Reservoom.DTOs;
 using Reservoom.Models;
@@ -20,17 +21,46 @@ namespace Reservoom.Services.ReservationConflictValidators
             _dbContextFactory=dbContextFactory;
         }
 
-        public async Task<bool> DoesCauseConflict(Reservation reservation)
+        public async Task<Reservation> GetConflictingReservation(Reservation reservation)
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-               return await dbContext.Reservations.Select(r => ToReservation(r)).AnyAsync(r => r.Conflicts(reservation));
+                var reservationDTO = await (from entry in dbContext.Reservations
+                                           where entry.FloorNumber == reservation.RoomID.FloorNumber
+                                           where entry.RoomNumber == reservation.RoomID.RoomNumber
+                                           where entry.EndTime > reservation.StartTime
+                                           where entry.StartTime < reservation.EndTime
+                                           select new ReservationDTO
+                                           {
+                                               Id = entry.Id,
+                                               UserName = entry.UserName,
+                                               FloorNumber = entry.FloorNumber,
+                                               RoomNumber = entry.RoomNumber,
+                                               EndTime = entry.EndTime,
+                                               StartTime = entry.StartTime
+                                           }).FirstOrDefaultAsync();
+                                                       
+                                            
+
+               //var reservationDTO = await dbContext.Reservations
+               //     .Where(r => r.FloorNumber == reservation.RoomID.FloorNumber)
+               //     .Where(r => r.RoomNumber == reservation.RoomID.RoomNumber)
+               //     .Where(r => r.EndTime > reservation.StartTime)
+               //     .Where(r => r.StartTime < reservation.EndTime)
+               //     .FirstOrDefaultAsync();
+
+                if (reservationDTO == null)
+                {
+                    return null;
+                }
+
+                return ToReservation(reservationDTO);
             }
         }
 
-        private static Reservation ToReservation(ReservationDTO r)
+        private static Reservation ToReservation(ReservationDTO reservationDTO)
         {
-            return new Reservation(new RoomID(r.FloorNumber, r.RoomNumber), r.UserName, r.StartTime, r.EndTime);
+            return new Reservation(new RoomID(reservationDTO.FloorNumber, reservationDTO.RoomNumber), reservationDTO.UserName, reservationDTO.StartTime, reservationDTO.EndTime);
         }
     }
 }

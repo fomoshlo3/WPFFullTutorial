@@ -1,9 +1,6 @@
 ﻿using Reservoom.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
@@ -12,7 +9,7 @@ namespace Reservoom.ViewModels
         readonly Reservation reservation;
 
         public string RoomID => reservation.RoomID?.ToString();
-        public  string UserName => reservation.UserName;
+        public string UserName => reservation.UserName;
         public string StartTime => reservation.StartTime.ToString("d");
         public string EndTime => reservation.EndTime.ToString("d");
 

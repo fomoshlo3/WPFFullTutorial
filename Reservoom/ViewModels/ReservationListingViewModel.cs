@@ -11,12 +11,18 @@ namespace Reservoom.ViewModels
     public class ReservationListingViewModel : ViewModelBase
     {
         //private readonly NavigationStore _navigationStore;
-        private readonly ObservableCollection<ReservationViewModel> _reservations;
+        readonly ObservableCollection<ReservationViewModel> _reservations;
         readonly HotelStore _hotelStore;
 
-
-
         public IEnumerable<ReservationViewModel> Reservations => _reservations;
+
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => Set(ref _isLoading, value);
+        }
+
 
         public ICommand LoadReservationsCommand { get; }
         public ICommand MakeReservationCommand { get; }

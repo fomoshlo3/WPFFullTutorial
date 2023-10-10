@@ -22,6 +22,8 @@ namespace Reservoom.Commands
 
         public override async Task ExecuteAsync(object? parameter)
         {
+            _reservationListingViewModel.IsLoading = true;
+
             try
             {
                 await _hotelStore.Load();
@@ -32,6 +34,10 @@ namespace Reservoom.Commands
             {
                 MessageBox.Show("Failed to load reservations.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            
+            //surround this with a finally{} if ExecuteAsync() could throw errors
+            _reservationListingViewModel.IsLoading = false;
+            
         }
     }
 }

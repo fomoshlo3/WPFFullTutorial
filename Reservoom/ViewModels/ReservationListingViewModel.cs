@@ -10,10 +10,11 @@ using System.Windows.Input;
 
 namespace Reservoom.ViewModels
 {
-    public class ReservationListingViewModel : ViewModelBase, IDisposable
+    public class ReservationListingViewModel : ViewModelBase
     {
         //private readonly NavigationStore _navigationStore;
         private readonly ObservableCollection<ReservationViewModel> _reservations;
+        readonly HotelStore _hotelStore;
 
 
 
@@ -24,13 +25,13 @@ namespace Reservoom.ViewModels
 
         public ReservationListingViewModel(HotelStore hotelStore, NavigationService makeReservationNavigationService)
         {
-
+            _hotelStore = hotelStore;
             _reservations = new ObservableCollection<ReservationViewModel>();
 
             LoadReservationsCommand = new LoadReservationsCommand(this, hotelStore);
             MakeReservationCommand = new NavigateCommand(makeReservationNavigationService);
 
-
+            _hotelStore.ReservationMade += OnReservationMade;
         }
 
         public static ReservationListingViewModel LoadViewModel(HotelStore hotelStore, NavigationService makeReservationNavigationService)
@@ -41,9 +42,10 @@ namespace Reservoom.ViewModels
             return reservationListingViewModel;
         }
 
-        void IDisposable.Dispose()
+        public override void Dispose()
         {
-            throw new NotImplementedException();
+            _hotelStore.ReservationMade -= OnReservationMade;
+            base.Dispose();
         }
         public void UpdateReservations(IEnumerable<Reservation> reservations)
         {
@@ -54,6 +56,12 @@ namespace Reservoom.ViewModels
                 var reservationViewModel = new ReservationViewModel(reservation);
                 _reservations.Add(reservationViewModel);
             }
+        }
+        void OnReservationMade(Reservation reservation)
+        {
+            var reservationViewModel = new ReservationViewModel(reservation);
+
+            _reservations.Add(reservationViewModel);
         }
     }
 }

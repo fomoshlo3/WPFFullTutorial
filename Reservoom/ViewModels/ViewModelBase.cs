@@ -42,6 +42,6 @@ namespace Reservoom.ViewModels
             return true;
         }
 
-        
+        public virtual void Dispose() { }
     }
 }

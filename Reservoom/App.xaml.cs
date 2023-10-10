@@ -63,7 +63,7 @@ namespace Reservoom
 
         private MakeReservationViewModel Create_MakeReservationViewModel()
         {
-            return new MakeReservationViewModel(_hotel, new NavigationService(_navigationStore, Create_ReservationListingViewModel));
+            return new MakeReservationViewModel(_hotelStore , new NavigationService(_navigationStore, Create_ReservationListingViewModel));
         }
         private ReservationListingViewModel Create_ReservationListingViewModel()
         {

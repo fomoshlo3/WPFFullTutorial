@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
-    public class ReservationViewModel : ViewModelBase, IDisposable
+    public class ReservationViewModel : ViewModelBase
     {
         readonly Reservation reservation;
 
@@ -72,9 +72,5 @@ namespace Reservoom.ViewModels
             this.reservation=reservation;
         }
 
-        void IDisposable.Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

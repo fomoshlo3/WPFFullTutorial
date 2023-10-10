@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows;
 using Reservoom.Services;
 using System.Threading.Tasks;
+using Reservoom.Stores;
 
 namespace Reservoom.Commands
 {
@@ -13,13 +14,15 @@ namespace Reservoom.Commands
     {
         private readonly Hotel _hotel;
         private readonly MakeReservationViewModel _makeReservationViewModel;
+        private readonly HotelStore _hotelStore;
         private readonly NavigationService _reservationListingViewNavigationService;
 
-        public SubmitReservationCommand(MakeReservationViewModel makeReservationViewModel, Hotel hotel, NavigationService reservationListingViewNavigationService)
+        public SubmitReservationCommand(MakeReservationViewModel makeReservationViewModel, HotelStore hotelStore, NavigationService reservationListingViewNavigationService)
         {
             _makeReservationViewModel=makeReservationViewModel;
+            _hotelStore = hotelStore;
             _reservationListingViewNavigationService = reservationListingViewNavigationService;
-            _hotel = hotel;
+            
 
             _makeReservationViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -43,7 +46,8 @@ namespace Reservoom.Commands
 
             try
             {
-                await _hotel.MakeReservation(reservation);
+                await _hotelStore.MakeReservation(reservation);
+
                 MessageBox.Show("Successfully booked reservation.","Success",MessageBoxButton.OK, MessageBoxImage.Information);
 
                 _reservationListingViewNavigationService.Navigate();

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Reservoom.ViewModels
 {
-    public class MakeReservationViewModel : ViewModelBase, IDisposable
+    public class MakeReservationViewModel : ViewModelBase
     {
         private string _userName;
         public string UserName
@@ -52,15 +52,10 @@ namespace Reservoom.ViewModels
 
         public ICommand CancelCommand { get; }
 
-        public MakeReservationViewModel(Hotel hotel, NavigationService reservationListingViewNavigationsService)
+        public MakeReservationViewModel(HotelStore hotelStore, NavigationService reservationListingViewNavigationsService)
         {
-            SubmitCommand = new SubmitReservationCommand(this, hotel, reservationListingViewNavigationsService);
+            SubmitCommand = new SubmitReservationCommand(this, hotelStore, reservationListingViewNavigationsService);
             CancelCommand = new NavigateCommand(reservationListingViewNavigationsService);
-        }
-
-        void IDisposable.Dispose()
-        {
-           
         }
     }
 }

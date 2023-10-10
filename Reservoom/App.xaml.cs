@@ -22,6 +22,7 @@ namespace Reservoom
         private const string CONNECTION_STRING = "Data Source=reservoom.db";
         private readonly Hotel _hotel;
         private readonly NavigationStore _navigationStore;
+        private readonly HotelStore _hotelStore;
         private readonly ReservoomDbContextFactory _reservoomDbContextFactory;
 
         public App()
@@ -33,6 +34,7 @@ namespace Reservoom
             ReservationBook reservationBook = new(reservationProvider, reservationCreator, reservationConflictValidator);
 
             _hotel = new Hotel("SingletonSean Suite", reservationBook);
+            _hotelStore = new HotelStore(_hotel);
             _navigationStore= new();
         }
 
@@ -59,13 +61,13 @@ namespace Reservoom
             base.OnStartup(e);
         }
 
-        private ReservationListingViewModel Create_ReservationListingViewModel()
-        {
-            return ReservationListingViewModel.LoadViewModel(_hotel, new NavigationService(_navigationStore, Create_MakeReservationViewModel));
-        }
         private MakeReservationViewModel Create_MakeReservationViewModel()
         {
             return new MakeReservationViewModel(_hotel, new NavigationService(_navigationStore, Create_ReservationListingViewModel));
+        }
+        private ReservationListingViewModel Create_ReservationListingViewModel()
+        {
+            return ReservationListingViewModel.LoadViewModel(_hotelStore, new NavigationService(_navigationStore, Create_MakeReservationViewModel));
         }
     }
 }

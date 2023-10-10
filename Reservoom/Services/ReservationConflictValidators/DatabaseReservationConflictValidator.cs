@@ -39,15 +39,6 @@ namespace Reservoom.Services.ReservationConflictValidators
                                                EndTime = entry.EndTime,
                                                StartTime = entry.StartTime
                                            }).FirstOrDefaultAsync();
-                                                       
-                                            
-
-               //var reservationDTO = await dbContext.Reservations
-               //     .Where(r => r.FloorNumber == reservation.RoomID.FloorNumber)
-               //     .Where(r => r.RoomNumber == reservation.RoomID.RoomNumber)
-               //     .Where(r => r.EndTime > reservation.StartTime)
-               //     .Where(r => r.StartTime < reservation.EndTime)
-               //     .FirstOrDefaultAsync();
 
                 if (reservationDTO == null)
                 {

@@ -6,17 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Reservoom.ViewModels
 {
     public class ReservationListingViewModel : ViewModelBase, IDisposable
     {
-        private readonly NavigationStore _navigationStore;
+        //private readonly NavigationStore _navigationStore;
         private readonly ObservableCollection<ReservationViewModel> _reservations;
-        private readonly Hotel _hotel;
+
 
 
         public IEnumerable<ReservationViewModel> Reservations => _reservations;
@@ -24,20 +22,20 @@ namespace Reservoom.ViewModels
         public ICommand LoadReservationsCommand { get; }
         public ICommand MakeReservationCommand { get; }
 
-        public ReservationListingViewModel(Hotel hotel, NavigationService makeReservationNavigationService)
+        public ReservationListingViewModel(HotelStore hotelStore, NavigationService makeReservationNavigationService)
         {
-            
+
             _reservations = new ObservableCollection<ReservationViewModel>();
 
-            LoadReservationsCommand=new LoadReservationsCommand(hotel, this);
+            LoadReservationsCommand = new LoadReservationsCommand(this, hotelStore);
             MakeReservationCommand = new NavigateCommand(makeReservationNavigationService);
 
-            
+
         }
 
-        public static ReservationListingViewModel LoadViewModel(Hotel hotel, NavigationService makeReservationNavigationService)
+        public static ReservationListingViewModel LoadViewModel(HotelStore hotelStore, NavigationService makeReservationNavigationService)
         {
-            ReservationListingViewModel reservationListingViewModel = new(hotel, makeReservationNavigationService);
+            ReservationListingViewModel reservationListingViewModel = new(hotelStore, makeReservationNavigationService);
             reservationListingViewModel.LoadReservationsCommand.Execute(null);
 
             return reservationListingViewModel;
@@ -51,7 +49,7 @@ namespace Reservoom.ViewModels
         {
             _reservations.Clear();
 
-            foreach(var reservation in reservations)
+            foreach (var reservation in reservations)
             {
                 var reservationViewModel = new ReservationViewModel(reservation);
                 _reservations.Add(reservationViewModel);

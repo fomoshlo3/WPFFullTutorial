@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,10 +15,10 @@ namespace Reservoom.Models
             _reservationBook = reservationBook;
         }
 
-        /// <inheritdoc cref="ReservationBook.GetReservations"/>
-        public async Task<IEnumerable<Reservation>> GetReservations()
+        /// <inheritdoc cref="ReservationBook.GetAllReservations"/>
+        public async Task<IEnumerable<Reservation>> GetAllReservations()
         {
-            return await _reservationBook.GetReservations();
+            return await _reservationBook.GetAllReservations();
         }
 
         /// <summary>Make a reservation.</summary>

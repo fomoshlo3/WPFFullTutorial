@@ -28,7 +28,7 @@ namespace Reservoom.Models
         /// Gets all reservations.
         /// </summary>
         /// <returns><see cref="IEnumerable{T}"/> of reservations.</returns>
-        public async Task<IEnumerable<Reservation>> GetReservations()
+        public async Task<IEnumerable<Reservation>> GetAllReservations()
         {
             return await _reservationProvider.GetAllReservationsAsync();
         }

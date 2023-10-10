@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Reservoom.DbContexts;
 using Reservoom.DTOs;
 using Reservoom.Models;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Reservoom.Services.ReservationProviders
 {
@@ -22,17 +24,26 @@ namespace Reservoom.Services.ReservationProviders
 
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
         {
-            using (var dbContext = _dbContextFactory.CreateDbContext())
+            try
             {
-                IEnumerable<ReservationDTO> reservationDTOs = await dbContext.Reservations.ToListAsync();
+                using (var dbContext = _dbContextFactory.CreateDbContext())
+                {
+                    IEnumerable<ReservationDTO> reservationDTOs = await dbContext.Reservations.ToListAsync();
 
-                return reservationDTOs.Select(r => ToReservation(r));
+                    var reservations = reservationDTOs.Select(r => ToReservation(r)).ToList();
+
+                    return reservations;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
-        private static Reservation ToReservation(ReservationDTO r)
+        private static Reservation ToReservation(ReservationDTO Reservation)
         {
-            return new Reservation(new RoomID(r.FloorNumber, r.RoomNumber), r.UserName, r.StartTime, r.EndTime);
+            return new Reservation(new RoomID(Reservation.FloorNumber, Reservation.RoomNumber), Reservation.UserName, Reservation.StartTime, Reservation.EndTime);
         }
     }
 }

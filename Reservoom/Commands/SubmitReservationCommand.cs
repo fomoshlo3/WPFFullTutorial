@@ -15,9 +15,11 @@ namespace Reservoom.Commands
         private readonly Hotel _hotel;
         private readonly MakeReservationViewModel _makeReservationViewModel;
         private readonly HotelStore _hotelStore;
-        private readonly NavigationService _reservationListingViewNavigationService;
+        private readonly NavigationService<ReservationListingViewModel> _reservationListingViewNavigationService;
 
-        public SubmitReservationCommand(MakeReservationViewModel makeReservationViewModel, HotelStore hotelStore, NavigationService reservationListingViewNavigationService)
+        public SubmitReservationCommand(MakeReservationViewModel makeReservationViewModel,
+                                        HotelStore hotelStore, 
+                                        NavigationService<ReservationListingViewModel> reservationListingViewNavigationService)
         {
             _makeReservationViewModel=makeReservationViewModel;
             _hotelStore = hotelStore;

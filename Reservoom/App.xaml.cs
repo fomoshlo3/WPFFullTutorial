@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Reservoom.DbContexts;
+using Reservoom.HostBuilder;
 using Reservoom.Models;
 using Reservoom.Services;
 using Reservoom.Services.ReservationConflictValidators;
@@ -22,8 +24,6 @@ namespace Reservoom
     /// </summary>
     public partial class App : Application
     {
-        private const string CONNECTION_STRING = "Data Source=reservoom.db";
-
         private readonly IHost _host;
         //private readonly Hotel _hotel;
         //private readonly NavigationStore _navigationStore;
@@ -33,28 +33,23 @@ namespace Reservoom
         public App()
         {
             _host = Host.CreateDefaultBuilder()
-                .ConfigureServices(services =>
+                .AddViewModels()
+                .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton(new ReservoomDbContextFactory(CONNECTION_STRING))
+                    string connString = hostContext.Configuration.GetConnectionString("Default");
+                    var hotels = hostContext.Configuration.GetSection("Hotels");
+                    
+                    services.AddSingleton(new ReservoomDbContextFactory(connString))
                             .AddSingleton<IReservationProvider, DatabaseReservationProvider>()
                             .AddSingleton<IReservationCreator, DatabaseReservationCreator>()
                             .AddSingleton<IReservationConflictValidator, DatabaseReservationConflictValidator>()
 
                             .AddTransient<ReservationBook>()
-                            .AddSingleton((s) => new Hotel("SingletonSean Suites", s.GetRequiredService<ReservationBook>()))
-
-                            .AddTransient<ReservationListingViewModel>()
-                            .AddSingleton<Func<ReservationListingViewModel>>((s) => () => s.GetRequiredService<ReservationListingViewModel>())
-                            .AddSingleton<NavigationService<ReservationListingViewModel>>()
-
-                            .AddTransient<MakeReservationViewModel>()
-                            .AddSingleton<Func<MakeReservationViewModel>>((s) => () => s.GetRequiredService<MakeReservationViewModel>())
-                            .AddSingleton<NavigationService<MakeReservationViewModel>>()
+                            .AddSingleton((s) => new Hotel(hotels["Default"], s.GetRequiredService<ReservationBook>()))
 
                             .AddSingleton<HotelStore>()
                             .AddSingleton<NavigationStore>()
 
-                            .AddSingleton<MainViewModel>()
                             .AddSingleton(s => new MainWindow()
                             {
                                 DataContext = s.GetRequiredService<MainViewModel>()
@@ -69,9 +64,11 @@ namespace Reservoom
             //ReservationBook reservationBook = new(reservationProvider, reservationCreator, reservationConflictValidator);
 
             //_hotel = new Hotel("SingletonSean Suite", reservationBook);
-            //_hotelStore = new HotelStore(_hotel);
+            //_hotelStore = new HotelStore(_hotel);q
             //_navigationStore= new();
         }
+
+
 
         protected override void OnStartup(StartupEventArgs e)
         {

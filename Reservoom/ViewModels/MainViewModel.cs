@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Reservoom.ViewModels
 {
-    public class MainViewModel : ViewModelBase, IDisposable
+    public class MainViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
@@ -18,13 +18,7 @@ namespace Reservoom.ViewModels
             _navigationStore=navigationStore;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
-
-   
-
-        void IDisposable.Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));

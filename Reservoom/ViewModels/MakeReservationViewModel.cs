@@ -55,7 +55,6 @@ namespace Reservoom.ViewModels
 
         private DateTime _endDate = new DateTime(2023, 1, 1);
 
-
         public DateTime EndDate
         {
             get => _endDate;
@@ -83,7 +82,6 @@ namespace Reservoom.ViewModels
             _propertyNameToErrorsDictionary[propertyName].Add(errorMessage);
             OnErrorsChanged(propertyName);
         }
-
 
         public ICommand SubmitCommand { get; }
 

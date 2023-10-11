@@ -12,7 +12,6 @@ namespace Reservoom.Commands
 {
     public class SubmitReservationCommand : AsyncCommandBase
     {
-        private readonly Hotel _hotel;
         private readonly MakeReservationViewModel _makeReservationViewModel;
         private readonly HotelStore _hotelStore;
         private readonly NavigationService<ReservationListingViewModel> _reservationListingViewNavigationService;

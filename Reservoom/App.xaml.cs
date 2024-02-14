@@ -72,6 +72,8 @@ namespace Reservoom
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             _host.Start();
 
             var ctxFactory = _host.Services.GetRequiredService<ReservoomDbContextFactory>();
@@ -90,7 +92,6 @@ namespace Reservoom
             MainWindow = _host.Services.GetRequiredService<MainWindow>();
             MainWindow.Show();
 
-            base.OnStartup(e);
         }
 
         //private MakeReservationViewModel Create_MakeReservationViewModel()
@@ -104,8 +105,9 @@ namespace Reservoom
 
         protected override void OnExit(ExitEventArgs e)
         {
-            _host.Dispose();
             base.OnExit(e);
+
+            _host.Dispose();
         }
     }
 }
